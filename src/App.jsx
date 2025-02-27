@@ -16,16 +16,16 @@ const [state, setState] = useState({
 })
 
 const increment = () => {
-     setState((prev)=>({
-         ...prev,
-         user: {
-             ...prev.user,
-          address: {
-             ...prev.user.address,
-             distance: prev.user.address.distance + 1
-          }
-         }
-     }))
+  setState((prevstate)=>({
+      ...prevstate,
+      user : {
+        ...prevstate.user,
+        address: {
+             ...prevstate.user.address,
+             distance : prevstate.user.address.distance + 1
+        }
+      }
+  }))
 }
 
 
