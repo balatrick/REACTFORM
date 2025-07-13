@@ -1,0 +1,32 @@
+.App{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+.searchInput{
+    width: 500px;
+    padding: 10px;
+}
+.text_field{
+    width: 500px;
+    margin: auto;
+    border: 1px solid #333;
+    padding: 10px;
+    max-height: 300px;
+    overflow-y: scroll;
+    text-align: left;
+}
+.result{
+    display: flex;
+    padding: 2px;
+}
+.result:hover{
+    cursor: pointer;
+    background-color: rgb(2, 4, 4);
+    color: red;
+}
+.highlight {
+  color: red;
+  font-weight: bold;
+}

@@ -1,48 +1,71 @@
-import React, { useState } from 'react'
-import SimpleForm from './SimpleForm'
+import React, { useEffect, useState } from 'react';
+import "./App.css";
 
 const App = () => {
-
-const [state, setState] = useState({
-  user: {
-    name: 'Bala',
-    age: 30,
-    address : {
-      streed : "no 5/10",
-      city: "new York",
-      distance: 10
+  const [input, setInput] = useState("");
+  const [recipes, setRecipes] = useState([]);
+  const [show, setShow] = useState(false)
+  const fetchData = async () => {
+    try {
+      const data = await fetch('https://dummyjson.com/recipes/search?q=' + input);
+      const json = await data.json();
+      setRecipes(json?.recipes || []);
+    } catch (err) {
+      console.error("Error fetching recipes:", err);
     }
-  }
-})
+  };
 
-const increment = () => {
-  setState((prevstate)=>({
-      ...prevstate,
-      user : {
-        ...prevstate.user,
-        address: {
-             ...prevstate.user.address,
-             distance : prevstate.user.address.distance + 1
-        }
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (input.trim()) {
+        fetchData();
+      } else {
+        setRecipes([]);
       }
-  }))
-}
+    }, 300);
 
+    return () => clearTimeout(timer);
+  }, [input]);
 
   return (
-    <div>
-      <SimpleForm/>
-      <div>
-        <h1>user information</h1>
-        <p>name : {state.user.name}</p>
-        <p>street : {state.user.address.streed}</p>
-        <p>city : {state.user.address.city}</p>
-        <p>distance : {state.user.address.distance}</p>
+    <div className='App'>
+      <h1>Auto Complete</h1>
+      <input
+        type="text" onBlur={()=> setShow(false) } onFocus={()=> setShow(true)}
+        value={input}
+        onChange={(e) => setInput(e.target.value)}
+        placeholder="Enter your text"
+        className="searchInput"
+      />
 
-        <button onClick={increment}>increament distance -- {state.user.address.distance}</button>
-      </div>
+      { show && <div className="text_field">
+        {recipes.map((r) => {
+          const name = r.name;
+          const index = name.toLowerCase().indexOf(input.toLowerCase());
+
+          if (index === -1 || input === "") {
+            return (
+              <span key={r.id} className="result">
+                {name}
+              </span>
+            );
+          }
+
+          const before = name.slice(0, index);
+          const match = name.slice(index, index + input.length);
+          const after = name.slice(index + input.length);
+
+          return (
+            <span key={r.id} className="result">
+              {before}
+              <span className="highlight">{match}</span>
+              {after}
+            </span>
+          );
+        })}
+      </div>}
     </div>
-  )
-}
+  );
+};
 
-export default App
+export default App;
